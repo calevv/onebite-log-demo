@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "type-gen": "npx supabase gen types typescript --project-id \"hkfyisaalkgeunaxuaaq\" --schema public > src/database.types.ts"
+    "type-gen": "dotenv -e .env -- sh -c \"npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/database.types.ts\""
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.14",
@@ -39,6 +39,7 @@
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
