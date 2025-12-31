@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRequestPasswordResetEmail } from "@/hooks/mutaton/use-request-password-reset-email";
+import { useRequestPasswordResetEmail } from "@/hooks/mutaton/auth/use-request-password-reset-email";
 import { generateErrorMessage } from "@/lib/errors";
 import { useState } from "react";
 import { toast } from "sonner";

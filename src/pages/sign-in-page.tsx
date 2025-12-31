@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSignInWithPassword } from "@/hooks/mutaton/use-sign-in-with-password";
+import { useSignInWithPassword } from "@/hooks/mutaton/auth/use-sign-in-with-password";
 import { useState } from "react";
 import { Link } from "react-router";
 import gitHubLogo from "@/assets/github-mark.svg";
-import { useSignInWithOAuth } from "@/hooks/mutaton/use-sign-in-wit-oauth";
+import { useSignInWithOAuth } from "@/hooks/mutaton/auth/use-sign-in-wit-oauth";
 import { toast } from "sonner";
 import { generateErrorMessage } from "@/lib/errors";
 
