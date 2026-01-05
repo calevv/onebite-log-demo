@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { useCreatePost } from "@/hooks/mutaton/post/use-create-post";
 import { toast } from "sonner";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
+import { useSession } from "@/store/session";
 
 type Image = {
   file: File;
@@ -13,6 +14,7 @@ type Image = {
 };
 
 export default function PostEditorModal() {
+  const session = useSession();
   const { isOpen, close } = usePostEditorModal();
   const [content, setContent] = useState("");
   const [images, setImages] = useState<Image[]>([]);
@@ -45,12 +47,19 @@ export default function PostEditorModal() {
   }, [isOpen]);
 
   const handleCloseModal = () => {
+    if (content !== "" || images.length !== 0) {
+      // alertmodal
+    }
     close();
   };
 
   const handleCreatePostClick = () => {
     if (content.trim() === "") return;
-    createPost(content);
+    createPost({
+      content,
+      images: images.map((image) => image.file),
+      userId: session!.user.id,
+    });
   };
 
   const handleSelectImages = (e: ChangeEvent<HTMLInputElement>) => {

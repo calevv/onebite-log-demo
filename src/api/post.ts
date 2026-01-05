@@ -27,29 +27,33 @@ export async function createPostWithImages({
   const post = await createPost(content);
 
   if (images.length === 0) return post;
+  try {
+    // 2. 이미지 업로드
+    // 병렬처리 만들기
 
-  // 2. 이미지 업로드
-  // 병렬처리 만들기
+    const imageUrls = await Promise.all(
+      images.map((image) => {
+        const fileExtension = image.name.split(".").pop() || "webp";
+        const fileName = `${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
+        const filePath = `${userId}/${post.id}/${fileName}`;
+        return uploadImage({
+          file: image,
+          filePath,
+        });
+      }),
+    );
 
-  const imageUrls = await Promise.all(
-    images.map((image) => {
-      const fileExtension = image.name.split(".").pop() || "webp";
-      const fileName = `${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
-      const filePath = `${userId}/${post.id}/${fileName}`;
-      return uploadImage({
-        file: image,
-        filePath,
-      });
-    }),
-  );
+    // 3. 포스트 테이블 업데이트
+    const updatedPost = await updatePost({
+      id: post.id,
+      image_urls: imageUrls,
+    });
 
-  // 3. 포스트 테이블 업데이트
-  const updatedPost = await updatePost({
-    id: post.id,
-    image_urls: imageUrls,
-  });
-
-  return updatedPost;
+    return updatedPost;
+  } catch (error) {
+    await deletePost(post.id);
+    throw error;
+  }
 }
 
 export async function updatePost(post: Partial<PostEntity> & { id: number }) {
@@ -57,6 +61,19 @@ export async function updatePost(post: Partial<PostEntity> & { id: number }) {
     .from("post")
     .update(post)
     .eq("id", post.id)
+    .select()
+    .single();
+
+  if (error) throw error;
+
+  return data;
+}
+
+export async function deletePost(id: number) {
+  const { data, error } = await supabase
+    .from("post")
+    .delete()
+    .eq("id", id)
     .select()
     .single();
 
