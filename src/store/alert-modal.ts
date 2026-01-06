@@ -18,10 +18,24 @@ const useAlertModalStore = create(
   devtools(
     combine(initialState, (set) => ({
       actions: {
-        open: () => {},
-        close: () => {},
+        open: (params: Omit<OpenState, "isOpen">) => {
+          set({ ...params, isOpen: true });
+        },
+        close: () => {
+          set({ isOpen: false });
+        },
       },
     })),
     { neme: "AlertModalStore" },
   ),
 );
+
+export const useOpenAlertModal = () => {
+  const open = useAlertModalStore((store) => store.actions.open);
+  return open;
+};
+export const useAlertModal = () => {
+  const store = useAlertModalStore();
+  return store as typeof store & State;
+  // 타입추론상 예상치못한 추론 가능
+};
