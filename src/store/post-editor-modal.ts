@@ -1,6 +1,25 @@
 import { create } from "zustand";
 import { combine, devtools } from "zustand/middleware";
 
+type CreateMode = {
+  isOpen: true;
+  type: "CREATE";
+};
+
+type EditMode = {
+  isOpen: true;
+  type: "EDIT";
+  postId: number;
+  content: string;
+  imageUrls: string[] | null;
+};
+
+type OpenState = CreateMode | EditMode;
+
+type CloseState = { isOpen: false };
+
+type State = CloseState | OpenState;
+
 const initialState = {
   isOpen: false,
 };
