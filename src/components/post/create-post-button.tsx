@@ -1,8 +1,8 @@
-import { useOpenPostEditorModal } from "@/store/post-editor-modal";
+import { useOpenCratePostModal } from "@/store/post-editor-modal";
 import { PlusCircleIcon } from "lucide-react";
 
 export default function CreatePostButton() {
-  const openPostEditorModal = useOpenPostEditorModal();
+  const openPostEditorModal = useOpenCratePostModal();
 
   return (
     <div
