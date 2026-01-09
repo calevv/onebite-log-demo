@@ -9,8 +9,25 @@ import {
 import { formatTimeAgo } from "@/lib/time";
 import EditPostItemButton from "@/components/post/edit-post-item-button";
 import DeletePostItemButton from "./delete-post-item-button";
+import { useSession } from "@/store/session";
+import { usePostByIdData } from "@/hooks/query/use-post-by-id-data";
+import Loader from "../loader";
+import Fallback from "../fallback";
 
-export default function PostItem(post: Post) {
+export default function PostItem({ postId }: { postId: number }) {
+  const {
+    data: post,
+    isPending,
+    error,
+  } = usePostByIdData({ postId, type: "FEED" });
+
+  const session = useSession();
+  const userId = session?.user.id;
+  const isMine = post?.author_id === userId;
+
+  if (isPending) return <Loader />;
+  if (error) return <Fallback />;
+
   return (
     <div className="flex flex-col gap-4 border-b pb-8">
       {/* 1. 유저 정보, 수정/삭제 버튼 */}
@@ -34,8 +51,12 @@ export default function PostItem(post: Post) {
 
         {/* 1-2. 수정/삭제 버튼 */}
         <div className="text-muted-foreground flex text-sm">
-          <EditPostItemButton {...post} />
-          <DeletePostItemButton id={post.id} />
+          {isMine && (
+            <>
+              <EditPostItemButton {...post} />
+              <DeletePostItemButton id={post.id} />
+            </>
+          )}
         </div>
       </div>
 
